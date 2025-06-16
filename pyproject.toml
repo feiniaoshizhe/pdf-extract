@@ -4,4 +4,15 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+    "celery==5.5.3",
+    "fastapi==0.115.12",
+    "html2text==2025.4.15",
+    "kombu==5.5.4",
+    "numpy==1.24.4",
+    "omegaconf==2.3.0",
+    "opencv-python==4.8.1.78",
+    "paddleocr==2.10.0",
+    "pillow==11.2.1",
+    "pydantic==2.11.4",
+]

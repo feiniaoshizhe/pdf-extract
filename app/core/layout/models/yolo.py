@@ -46,32 +46,29 @@ class LayoutYOLOv10:
             import torchvision
             self.nms_func = torchvision.ops.nms
 
-    def predict(self, images: dict, result_path=None):
+    def predict(self, image: np.ndarray, result_path=None):
         """
-
-        :param images:
+        :param image:
         :param result_path:
         :return:
         """
-        results = []
-        for image_id, image in images.items():
-            result = self.model.predict(image, iou=self.iou_thres, verbose=False, device=self.device)[0]
-            boxes = result.boxes.xyxy.tolist()
-            classes = result.boxes.cls.tolist()
-            scores = result.boxes.conf.tolist()
-            keys = ["poly", "category_id", "score"]
-            layout_results = [dict(zip(keys, values)) for values in zip(boxes, classes, scores)]
+        result = self.model.predict(image, iou=self.iou_thres, verbose=False, device=self.device)[0]
+        boxes = result.boxes.xyxy.tolist()
+        classes = result.boxes.cls.tolist()
+        scores = result.boxes.conf.tolist()
+        keys = ["poly", "category_id", "score"]
+        layout_results = [dict(zip(keys, values)) for values in zip(boxes, classes, scores)]
 
-            if self.visualize:
-                self.result_visualize(image_id, image, boxes, classes, scores, result_path)
+        # if self.visualize:
+        #     self.result_visualize(image_id, image, boxes, classes, scores, result_path)
 
-            results.append(
-                {
-                    "image_id": image_id,
-                    "layout_results": layout_results
-                }
-            )
-        return results
+        return {
+            "layout_dets": layout_results,
+            "page_info": {
+                "height": image.shape[0],
+                "width": image.shape[1]
+            }
+        }
 
     def result_visualize(self, image_id, image, boxes, classes, scores, result_path):
         if self.visualize:
